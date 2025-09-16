@@ -5,7 +5,7 @@
     }
   },
   "env": {
-    "LLAMA_API_KEY": "@llama_api_key",
+  "LLAMA_API_KEY": "",
     "LLAMA_BASE_URL": "https://api.llama.com/compat/v1/",
     "PERPLEXITY_API_KEY": "@perplexity_api_key"
   },
