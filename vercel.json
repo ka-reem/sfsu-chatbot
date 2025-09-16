@@ -4,11 +4,6 @@
       "maxDuration": 30
     }
   },
-  "env": {
-  "LLAMA_API_KEY": "",
-    "LLAMA_BASE_URL": "https://api.llama.com/compat/v1/",
-    "PERPLEXITY_API_KEY": ""
-  },
   "build": {
     "env": {
       "NEXT_TELEMETRY_DISABLED": "1"
