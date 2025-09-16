@@ -26,6 +26,9 @@ Create a `.env.local` file in the root directory:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
+LLAMA_API_KEY=your_llama_api_key_here
+# Optional: override default Llama base URL
+LLAMA_BASE_URL=https://api.llama.com/compat/v1/
 PERPLEXITY_API_KEY=your_perplexity_api_key_here
 NEXT_TELEMETRY_DISABLED=1
 ```
@@ -55,16 +58,18 @@ Open [http://localhost:3000](http://localhost:3000) to see the chatbot.
 1. Push your code to a GitHub repository
 2. Connect your GitHub repository to Vercel
 3. Add environment variables in Vercel dashboard:
-   - `OPENAI_API_KEY`
+   - `OPENAI_API_KEY` (optional if using OpenAI)
+   - `LLAMA_API_KEY` (if using Llama-compatible API)
    - `PERPLEXITY_API_KEY`
 4. Deploy!
 
 ### Environment Variables in Vercel
 
 1. Go to your project settings in Vercel
-2. Navigate to "Environment Variables"
+3. Navigate to "Environment Variables"
 3. Add the required environment variables:
-   - `OPENAI_API_KEY`: Your OpenAI API key
+   - `OPENAI_API_KEY`: Your OpenAI API key (optional)
+   - `LLAMA_API_KEY`: Your Llama API key (if using Llama-compatible endpoint)
    - `PERPLEXITY_API_KEY`: Your Perplexity API key
 
 ## API Keys Setup
