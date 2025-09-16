@@ -3,12 +3,12 @@ import { PerplexitySearchResult } from '@/types/chat';
 
 // Initialize OpenAI client for Llama API (lazy initialization)
 function getOpenAIClient() {
-  // Prefer LLAMA_API_KEY for Llama-compatible endpoints, fall back to OPENAI_API_KEY
-  const apiKey = process.env.LLAMA_API_KEY || process.env.OPENAI_API_KEY;
+  // Use LLAMA_API_KEY for Llama-compatible endpoints via the OpenAI-compatible client
+  const apiKey = process.env.LLAMA_API_KEY;
   const baseURL = process.env.LLAMA_BASE_URL || 'https://api.llama.com/compat/v1/';
 
   if (!apiKey) {
-    throw new Error('No API key found. Set LLAMA_API_KEY or OPENAI_API_KEY in your environment.');
+    throw new Error('No API key found. Set LLAMA_API_KEY in your environment.');
   }
 
   return new OpenAI({
