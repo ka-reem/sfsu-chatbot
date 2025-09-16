@@ -104,26 +104,67 @@ export async function POST(request: NextRequest) {
       ...messages.slice(-5).map(msg => ({ role: msg.role as 'user' | 'assistant' | 'system', content: msg.content }))
     ];
 
-    const completion = await openaiClient.chat.completions.create({
-      model: 'Llama-4-Maverick-17B-128E-Instruct-FP8',
-      messages: chatMessages,
-      temperature: 0.1,
-      max_tokens: 1000,
-    });
+    // Get the appropriate model name based on API configuration
+    const model = 'Llama-4-Maverick-17B-128E-Instruct-FP8';
 
-    const assistantMessage = completion.choices[0].message.content;
+    try {
+      const completion = await openaiClient.chat.completions.create({
+        model,
+        messages: chatMessages,
+        temperature: 0.1,
+        max_tokens: 1000,
+      });
 
-    if (!assistantMessage) {
-      throw new Error('No response from AI model');
+      const assistantMessage = completion.choices[0].message.content;
+
+      if (!assistantMessage) {
+        throw new Error('No response from AI model');
+      }
+
+      const response: ChatResponse = {
+        message: assistantMessage,
+        usedSearch,
+        sources: usedSearch && searchResults ? searchResults.sources : undefined
+      };
+
+      return NextResponse.json(response);
+    } catch (apiError: unknown) {
+      const error = apiError as { message?: string; status?: number; type?: string; code?: string; param?: string };
+      console.error('API Error details:', {
+        message: error.message,
+        status: error.status,
+        type: error.type,
+        code: error.code,
+        param: error.param,
+        model: model,
+      });
+      
+      // Try with a different model if this one failed
+      if (error.status === 400 && !process.env.OPENAI_API_KEY) {
+        console.log('Trying with alternative model name...');
+        try {
+          const fallbackCompletion = await openaiClient.chat.completions.create({
+            model: 'llama-2-7b-chat',
+            messages: chatMessages,
+            temperature: 0.1,
+            max_tokens: 1000,
+          });
+          
+          const fallbackMessage = fallbackCompletion.choices[0].message.content;
+          if (fallbackMessage) {
+            return NextResponse.json({
+              message: fallbackMessage,
+              usedSearch,
+              sources: usedSearch && searchResults ? searchResults.sources : undefined
+            } as ChatResponse);
+          }
+        } catch (fallbackError) {
+          console.error('Fallback model also failed:', fallbackError);
+        }
+      }
+      
+      throw apiError;
     }
-
-    const response: ChatResponse = {
-      message: assistantMessage,
-      usedSearch,
-      sources: usedSearch && searchResults ? searchResults.sources : undefined
-    };
-
-    return NextResponse.json(response);
 
   } catch (error) {
     console.error('Chat API error:', error);
