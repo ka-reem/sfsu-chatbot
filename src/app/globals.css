@@ -24,3 +24,37 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Easter-egg: fixed hover-only label in top-right */
+.cyconerd-hover-wrapper {
+  position: fixed;
+  top: 8px;
+  right: 20px; /* slightly left of the absolute corner */
+  width: 22px;
+  height: 22px;
+  pointer-events: auto;
+  z-index: 9999;
+}
+.cyconerd-label {
+  position: absolute;
+  top: 28px; /* show below the hitbox */
+  right: 0;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  pointer-events: none;
+}
+.cyconerd-hover-wrapper:hover .cyconerd-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .cyconerd-hover-wrapper { display: none !important; }
+}
