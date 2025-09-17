@@ -14,7 +14,7 @@ export default function RootLayout({
   // --- EASTER EGG SETTINGS ---
   // To change the visibility or the displayed name, edit these constants below.
   const EASTER_ENABLED = true; // set to false to disable
-  const EASTER_NAME = 'CycoNerd'; // change the displayed name here
+  const EASTER_NAME = 'VIDMAN2'; // change the displayed name here
 
   return (
     <html lang="en">
