@@ -196,7 +196,7 @@ export default function ChatInterface() {
             </button>
           </div>
           <div className="text-xs text-gray-500 mt-2 text-center">
-            This chatbot provides general information only. Please refer to the official SFSU website for the most accurate and up-to-date information.
+            This chatbot is not affiliated with SFSU and may contain inaccuracies. Please refer to the official SFSU website for accurate, up-to-date information.
           </div>
         </div>
       </div>
