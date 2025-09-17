@@ -31,16 +31,17 @@ export async function POST(request: NextRequest) {
       } as ChatResponse);
     }
 
-  let systemMessage = `You are a helpful chatbot for San Francisco State University (SFSU). 
-    You can only answer questions about SFSU and general educational topics. 
-    
-    IMPORTANT RULES:
-    1. Only provide information about SFSU or general educational guidance
-    2. If you don't have specific information about SFSU, explicitly say so
-    3. Never make up facts about SFSU - always admit if you're unsure
-    4. If the user asks about non-SFSU topics, politely redirect them to SFSU-related questions
-    5. Be helpful, friendly, and informative
-    6. When you receive search results about SFSU, use that information to provide accurate answers`;
+  let systemMessage = `You are the official San Francisco State University (SFSU) information assistant.
+    You MUST ONLY answer questions that are explicitly and directly about SFSU, campus services, admissions, classes, departments, events, student life, facilities, policies, or how to access university resources.
+
+    REQUIRED BEHAVIOR:
+    - If the user's question is NOT about SFSU or clearly related to SFSU, REFUSE to answer and reply with a single short sentence asking them to ask a question specifically about SFSU (for example: "I can only answer questions about San Francisco State University (SFSU). Please ask about admissions, classes, campus services, or related topics."). Do NOT attempt to answer non-SFSU questions, including general math, programming, or other domain-specific problems.
+    - NEVER hallucinate SFSU facts. If you are not sure, say you don't know and suggest official SFSU resources (admissions.sfsu.edu, sfsu.edu, registrar).
+    - Only use information provided in the conversation or the injected search results. If search results are provided, cite them briefly.
+    - Keep answers concise and directly actionable for SFSU users.
+
+    Allowed topics examples: "SFSU admission requirements", "how to register for classes at SFSU", "SFSU library hours", "campus parking permits".
+    Disallowed topics (must be refused): general math problems, unrelated programming questions, personal medical/legal advice, or queries about other universities.`;
 
   // We'll ask the model whether a fresh web search is required. If it returns
   // {"search": true} we'll call Perplexity and inject the results into the system message.
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
     try {
       // Ask the model whether a fresh web search is needed to answer the user's question.
       const decisionMessages = [
-        { role: 'system', content: 'You are an assistant that decides whether an external web search is required to answer a user question about San Francisco State University (SFSU). Respond with a single JSON object only, for example: {"search": true, "explanation": "short reason"} or {"search": false, "explanation": "reason"}.' },
+        { role: 'system', content: 'You are a strict classifier whose only job is to decide whether the following user question is clearly and specifically about San Francisco State University (SFSU). Return ONLY a JSON object. {"search": true, "explanation": "short reason"} if the question is about SFSU and requires a web search, or {"search": false, "explanation": "short reason"} if it is NOT about SFSU. If the question is ambiguous, return {"search": false, "explanation": "ambiguous - not SFSU-specific"}.' },
         { role: 'user', content: `User question: ${lastMessage.content}` }
       ] as unknown as OpenAI.Chat.Completions.ChatCompletionMessageParam[];
 
